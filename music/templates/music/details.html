@@ -6,10 +6,20 @@
 <h2>
     {{album.artist}}
 </h2>
-<ul>
-    {%for song in  album.song_set.all%}
-        <li>
-            {{song.song_title}}.{{song.file_type}}
-        </li>
+{% if error_message %}
+    <p><strong>{{error_message}}</strong></p>
+{% endif %}
+
+<form action="{% url 'music:favourite' album.id %}" method="POST">
+    {% csrf_token %}
+    {% for song in album.song_set.all %}
+        <input type="radio" id="song{{forloop.counter}}" name="song" value="{{song.id}}">
+        <label for=song{{forloop.counter}} >
+            {{song.song_title}}
+            {%if song.is_favourite %}
+                <img src="https://www.google.com/imgres?imgurl=https%3A%2F%2Ff4.bcbits.com%2Fimg%2F0005292398_10.jpg&imgrefurl=https%3A%2F%2Ffavoriterecordings.bandcamp.com%2F&docid=aPY9161BPsLHoM&tbnid=xNbAYuB3QGelpM%3A&vet=10ahUKEwixgtWkjL7lAhUFqY8KHcz0BaYQMwh_KAUwBQ..i&w=1200&h=615&bih=722&biw=1536&q=favorite%20images&ved=0ahUKEwixgtWkjL7lAhUFqY8KHcz0BaYQMwh_KAUwBQ&iact=mrc&uact=8">
+            {%endif%}
+        </label><br>
     {%endfor%}
-</ul>
+    <input type="submit" value="favourite">
+</form>
